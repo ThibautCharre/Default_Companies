@@ -7,30 +7,47 @@ logger = logging.getLogger(__name__)
 
 
 def clean_dataset(default_risk_dataset: pd.DataFrame,
-                  ratio_na_per_features=0.05,
-                  nb_na_sample_threshold=0,
-                  ratio_under_oversampled=1,
-                  random_state=42) -> pd.DataFrame:
-    """Clean rows and columns from NAs values
+                  ratio_na_per_features: float = 0.05,
+                  nb_na_sample_threshold: int = 0,
+                  ratio_under_oversampled: float = 0.2,
+                  random_state: int = 42) -> pd.DataFrame:
+    """ Clean NAs from columns and lines
 
-    Returns:
-        pd.DataFrame: _description_
+    Parameters
+    ----------
+    default_risk_dataset: pd.Dataframe
+    ratio_na_per_features: float
+    nb_na_sample_threshold: int
+    ratio_under_oversampled: float
+    random_state: int
+
+    Returns
+    -------
+    A dataframe with cleaned NAs values
+
     """
-    logger.info("clean data")
+    logger.info("Starting to treat NAs values per features")
     default_risk_dataset = select_non_empty_features(
         default_risk_dataset,
         ratio_na_per_features=ratio_na_per_features
     )
+    logger.info("Columns cleaned")
+
+    logger.info("Starting to treat NAs values per lines")
     default_risk_dataset = select_non_empty_companies(
         default_risk_dataset,
         nb_na_sample_threshold=nb_na_sample_threshold
     )
+    logger.info("Lines cleaned")
+
+    logger.info("Re balancing dataset")
     if ratio_under_oversampled != 1:
         default_risk_dataset = resample_dataset(
             default_risk_dataset,
             ratio_under_oversampled=ratio_under_oversampled,
             random_state=random_state
         )
+    logger.info("Dataset re balanced")
     return default_risk_dataset
 
 
@@ -57,17 +74,24 @@ def select_non_empty_features(default_risk_dataset: pd.DataFrame,
     )
     nb_samples = default_risk_dataset.shape[0]
     err_feat = ratio_na_per_features / 100 * nb_samples
-    del_feat = data_na_columns.query(f"nb_na > @{err_feat}")["Feature"]
+    del_feat = data_na_columns.query(f"nb_na > {err_feat}")["Feature"]
     default_risk_dataset.drop(columns=del_feat, inplace=True)
     return default_risk_dataset
 
 
 def select_non_empty_companies(default_risk_dataset,
-                               nb_na_sample_threshold=1) -> pd.DataFrame:
-    """Clean rows containing more than nb_na_sample_threshold NAs
+                               nb_na_sample_threshold: int = 1) -> pd.DataFrame:
+    """ Clean rows containing an inferior number of NAs values than a defined threshold
 
-    Returns:
-        pd.DataFrame: _description_
+    Parameters
+    ----------
+    default_risk_dataset: pd.Dataframe
+    nb_na_sample_threshold: int
+
+    Returns
+    -------
+    pd.Dataframe
+
     """
     data_na_rows = default_risk_dataset.apply(
         lambda row: np.sum(row.isna()),
@@ -84,10 +108,18 @@ def select_non_empty_companies(default_risk_dataset,
 def resample_dataset(default_risk_dataset: pd.DataFrame,
                      ratio_under_oversampled=0.2,
                      random_state=42) -> pd.DataFrame:
-    """Under sampling of imbalanced dataset
+    """ Re balancing of the cleaned dataset
 
-    Returns:
-        pd.DataFrame: _description_
+    Parameters
+    ----------
+    default_risk_dataset: pd.Dataframe
+    ratio_under_oversampled: float
+    random_state: int
+
+    Returns
+    -------
+    pd.Dataframe
+
     """
     nb_default = np.sum(default_risk_dataset.loc[default_risk_dataset.X_65 > 0, "X_65"])
     nb_samples = default_risk_dataset.shape[0]

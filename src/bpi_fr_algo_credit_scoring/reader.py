@@ -6,31 +6,27 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def read_data(default_year=1) -> pd.DataFrame:
-    """Read all data from local files
-
-    Returns:
-        pd.DataFrame: _description_
+def read_yearly_data(path: str,
+                     default_year: int = 1) -> pd.DataFrame:
     """
-    data_set = {}
-    for year in range(1, 6):
-        data_set[year] = read_yearly_data(f"data/{str(year)}year.arff")
-        data_set[year]["X_65"] = data_set[year]["X_65"].astype("int")
-    return data_set[default_year]
 
+    Parameters
+    ----------
+    path: String character indicating directory of data file
+    default_year: Integer representing default year of companies (default is 1)
 
-def read_yearly_data(path: str) -> pd.DataFrame:
-    """Read all data from local files
+    Returns
+    -------
+    Dataframe containing data of default and non-default companies
 
-    Returns:
-        pd.DataFrame: _description_
     """
-    logger.info(f"File path is {path}")
+    logger.info(f"importing dataset for {default_year} year default companies")
     dt = pd.DataFrame(
-        data=arff.load(open(file=path,
+        data=arff.load(open(file=f'{path}/{default_year}year.arff',
                             mode="r",
                             encoding="utf-8"))["data"],
         columns=[f"X_{n_col}" for n_col in range(1, 66)],
     )
     dt["X_65"] = dt["X_65"].astype("int")
+    logger.info(f"Dataset correctly imported")
     return dt

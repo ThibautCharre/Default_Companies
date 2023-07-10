@@ -2,7 +2,7 @@ import logging
 
 from bpi_fr_algo_credit_scoring.feature_engineering import select_features
 from bpi_fr_algo_credit_scoring.data_pipeline import clean_dataset
-from bpi_fr_algo_credit_scoring.reader import read_data
+from bpi_fr_algo_credit_scoring.reader import read_yearly_data
 from bpi_fr_algo_credit_scoring.model import models_comparison
 
 logger = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def run():
     logger.info("Start to read data from website")
-    default_risk_dataset = read_data(default_year=1)
+    default_risk_dataset = read_yearly_data(default_year=1)
     logger.info("Start to clean dataset")
     cleaned_default_risk = clean_dataset(
         default_risk_dataset,
