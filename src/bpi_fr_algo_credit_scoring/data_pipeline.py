@@ -6,12 +6,14 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def clean_dataset(default_risk_dataset: pd.DataFrame,
-                  ratio_na_per_features: float = 0.05,
-                  nb_na_sample_threshold: int = 0,
-                  ratio_under_oversampled: float = 0.2,
-                  random_state: int = 42) -> pd.DataFrame:
-    """ Clean NAs from columns and lines
+def clean_dataset(
+    default_risk_dataset: pd.DataFrame,
+    ratio_na_per_features: float = 0.05,
+    nb_na_sample_threshold: int = 0,
+    ratio_under_oversampled: float = 0.2,
+    random_state: int = 42,
+) -> pd.DataFrame:
+    """Clean NAs from columns and lines
 
     Parameters
     ----------
@@ -28,15 +30,13 @@ def clean_dataset(default_risk_dataset: pd.DataFrame,
     """
     logger.info("Starting to treat NAs values per features")
     default_risk_dataset = select_non_empty_features(
-        default_risk_dataset,
-        ratio_na_per_features=ratio_na_per_features
+        default_risk_dataset, ratio_na_per_features=ratio_na_per_features
     )
     logger.info("Columns cleaned")
 
     logger.info("Starting to treat NAs values per lines")
     default_risk_dataset = select_non_empty_companies(
-        default_risk_dataset,
-        nb_na_sample_threshold=nb_na_sample_threshold
+        default_risk_dataset, nb_na_sample_threshold=nb_na_sample_threshold
     )
     logger.info("Lines cleaned")
 
@@ -45,14 +45,15 @@ def clean_dataset(default_risk_dataset: pd.DataFrame,
         default_risk_dataset = resample_dataset(
             default_risk_dataset,
             ratio_under_oversampled=ratio_under_oversampled,
-            random_state=random_state
+            random_state=random_state,
         )
     logger.info("Dataset re balanced")
     return default_risk_dataset
 
 
-def select_non_empty_features(default_risk_dataset: pd.DataFrame,
-                              ratio_na_per_features: float = 0.05) -> pd.DataFrame:
+def select_non_empty_features(
+    default_risk_dataset: pd.DataFrame, ratio_na_per_features: float = 0.05
+) -> pd.DataFrame:
     """Clean columns with number of NAs values superior to a threshold.
 
     Parameters
@@ -79,9 +80,10 @@ def select_non_empty_features(default_risk_dataset: pd.DataFrame,
     return default_risk_dataset
 
 
-def select_non_empty_companies(default_risk_dataset,
-                               nb_na_sample_threshold: int = 1) -> pd.DataFrame:
-    """ Clean rows containing an inferior number of NAs values than a defined threshold
+def select_non_empty_companies(
+    default_risk_dataset, nb_na_sample_threshold: int = 1
+) -> pd.DataFrame:
+    """Clean rows containing an inferior number of NAs values than a defined threshold
 
     Parameters
     ----------
@@ -93,22 +95,16 @@ def select_non_empty_companies(default_risk_dataset,
     pd.Dataframe
 
     """
-    data_na_rows = default_risk_dataset.apply(
-        lambda row: np.sum(row.isna()),
-        axis=1
-    )
+    data_na_rows = default_risk_dataset.apply(lambda row: np.sum(row.isna()), axis=1)
     del_rows = data_na_rows[data_na_rows > nb_na_sample_threshold]
-    default_risk_dataset.drop(
-        index=del_rows.index,
-        inplace=True
-    )
+    default_risk_dataset.drop(index=del_rows.index, inplace=True)
     return default_risk_dataset
 
 
-def resample_dataset(default_risk_dataset: pd.DataFrame,
-                     ratio_under_oversampled=0.2,
-                     random_state=42) -> pd.DataFrame:
-    """ Re balancing of the cleaned dataset
+def resample_dataset(
+    default_risk_dataset: pd.DataFrame, ratio_under_oversampled=0.2, random_state=42
+) -> pd.DataFrame:
+    """Re balancing of the cleaned dataset
 
     Parameters
     ----------
@@ -121,11 +117,13 @@ def resample_dataset(default_risk_dataset: pd.DataFrame,
     pd.Dataframe
 
     """
-    nb_default = np.sum(default_risk_dataset.loc[default_risk_dataset.X_65 > 0, "X_65"])
+    nb_default = np.sum(
+        default_risk_dataset.loc[default_risk_dataset.Default > 0, "Default"]
+    )
     nb_samples = default_risk_dataset.shape[0]
     np.random.seed(random_state)
     drop_indices = np.random.choice(
-        default_risk_dataset[default_risk_dataset.X_65 == 0].index,
+        default_risk_dataset[default_risk_dataset.Default == 0].index,
         int(nb_samples - round(nb_default / ratio_under_oversampled, 0)),
         replace=False,
     )

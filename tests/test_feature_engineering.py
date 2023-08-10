@@ -15,6 +15,6 @@ def test_select_features():
     dataset = read_yearly_data(test_file_path)
     dataset = clean_dataset(dataset)
     # When
-    dataset = select_features(dataset, ['X_2'])
+    dataset = select_features(dataset, ["total liabilities / total assets"])
     # Then
     assert dataset.shape[0] != 0

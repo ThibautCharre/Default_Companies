@@ -22,6 +22,8 @@ datetime = "^5.1"
 ipykernel = "^6.24.0"
 llvmlite = "^0.40.1"
 shap = "^0.42.0"
+dash = "^2.11.1"
+plotly-express = "^0.4.1"
 
 
 [tool.poetry.group.dev.dependencies]

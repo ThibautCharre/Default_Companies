@@ -9,12 +9,17 @@
 
 ## Description
 The project aims at detecting companies that are most likely to default.
-Machine learning algorithms are imported and predictive scores are calculated and compared 
+Machine learning algorithms are imported and predictive scores are calculated and compared
 to select the most efficient and reliable model.
-The original dataset consists of financial variables issued from financial reports of companies
-and a labeled variable (X_65) indicating the default event (1) or the non-default (0) of a company. 
+The original dataset consists of financial variables issued from companies' financial reports
+and a labeled variable (X_65) indicating historical default (1) or the non-default events (0) of companies.
+
+The algorithm delivered imports the original dataset, cleans it and displays a ML algorithms scores such as
+precision, recall and F1-score.
+Hypertuning of selected algorithm parameters is made in a Jupyter notebook located in the folder "/notebooks"
+while variables shap values are described in another Jupyter notebook still located in the same folder.
 
 ## Todo :
 - Poetry: done
-- Pre-commit
+- Pre-commit: done
 - Pytest: done

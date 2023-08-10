@@ -60,8 +60,8 @@ def get_x_y_train_test(
 
     """
     logger.info("Splitting dataset into training & testing datasets")
-    y = cleaned_dataset["X_65"]
-    x = cleaned_dataset.drop(columns="X_65")
+    y = cleaned_dataset["Default"]
+    x = cleaned_dataset.drop(columns="Default")
     x_train, x_test, y_train, y_test = train_test_split(
         x, y, test_size=test_size, random_state=random_state
     )
