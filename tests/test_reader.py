@@ -1,17 +1,13 @@
 import logging
-from pathlib import Path
 
 from bpi_fr_algo_credit_scoring.reader import read_yearly_data
-from tests.conftest import TEST_DATA_ROOT
+from bpi_fr_algo_credit_scoring.conf import DATA_ROOT
 
 logger = logging.getLogger(__name__)
 
 
 def test_read_data():
     # Given
-    test_file_path = Path.joinpath(TEST_DATA_ROOT)
-    # When
-    dataset = read_yearly_data(test_file_path)
+    dataset = read_yearly_data(path=DATA_ROOT, default_year=1)
     # Then
-    logger.info(test_file_path)
     assert dataset.shape[0] != 0

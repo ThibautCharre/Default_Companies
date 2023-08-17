@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 import arff
 import pandas as pd
@@ -115,3 +116,30 @@ def rename_columns(default_risk_dataset: pd.DataFrame) -> pd.DataFrame:
     }
     default_risk_dataset.rename(mapper=variable_dict, axis=1, inplace=True)
     return default_risk_dataset
+
+
+def read_new_companies_data(
+    path: str, name_file: str, to_drop_feat: List[str]
+) -> pd.DataFrame:
+    """
+
+    Parameters
+    ----------
+    path: str
+    name_file: str
+    to_drop_feat: List
+
+    Returns
+    -------
+    Dataframe containing data of default and non-default companies
+
+    """
+    logger.info(f"Importing new company data")
+    new_company_data = pd.read_csv(
+        filepath_or_buffer=f"{path}/{name_file}",
+        sep=",",
+    )
+    if to_drop_feat:
+        new_company_data.drop(columns=to_drop_feat, inplace=True)
+    logger.info(f"Dataset of the new company ready for default prediction!")
+    return new_company_data

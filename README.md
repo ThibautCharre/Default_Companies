@@ -2,24 +2,30 @@
 
 ## Road map
 1/ Importing dataset
-2/ Cleaning dataset and missing values
-3/ Feature engineering phase
-4/ Machine Learning algorithms predictions
-5/ Selecting the best algo and optimising its hyperparameters
+2/ Cleaning of dataset and treatment of missing values
+3/ Fitting of the ML seleceted model to the training dataset
+4/ Import of new company values to calculate a probability of default
+5/ Probability calculation
 
 ## Description
 The project aims at detecting companies that are most likely to default.
-Machine learning algorithms are imported and predictive scores are calculated and compared
-to select the most efficient and reliable model.
-The original dataset consists of financial variables issued from companies' financial reports
-and a labeled variable (X_65) indicating historical default (1) or the non-default events (0) of companies.
+Original dataset contains 65 financial variables describing companies financial statements.
+Research regarding importances of variables are realized in the Jupyter notebooks folder.
+Besides, comparison of ML models aiming at selecting the best fitted model is done within the same folder.
+The principal algorithm is located in the src/<package>/main.py file under the function run()
 
-The algorithm delivered imports the original dataset, cleans it and displays a ML algorithms scores such as
-precision, recall and F1-score.
-Hypertuning of selected algorithm parameters is made in a Jupyter notebook located in the folder "/notebooks"
-while variables shap values are described in another Jupyter notebook still located in the same folder.
+## Main Algo launch
+To run the algo aiming at calculating a default probability for a new company, follow these instructions:
 
-## Todo :
-- Poetry: done
-- Pre-commit: done
-- Pytest: done
+1/ Retrieve the project through git
+git pull origin
+
+2/ After having installed poetry, install the environment and the packages needed
+by executing the following command in a powershell
+poetry install
+
+3/ To change values of a company launched in the main algo, modify values from the csv file "new_comp_data.csv",
+located in "bpi-fr-algo-credit-scoring\tests\data"
+
+4/ By running the command
+poetry run app_script
