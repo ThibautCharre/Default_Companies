@@ -46,7 +46,7 @@ def model_fitting(cleaned_dataset: pd.DataFrame, y_label: str):
     y = cleaned_dataset[y_label]
     x = cleaned_dataset.drop(columns=y_label)
 
-    model = DecisionTreeClassifier()
+    model = DecisionTreeClassifier(random_state=4242)
     model.fit(x, y)
 
     logger.info("Split was successful")
